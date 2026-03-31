@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group = 'com.clubix.repo'
+version = '0.1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'com.clubix:clubix-core:0.1.0-SNAPSHOT'
+
+    // Spring Context (stereotypes: @Repository, @Component, etc.)
+    implementation 'org.springframework:spring-context:6.2.5'
+    // Spring R2DBC (DatabaseClient)
+    implementation 'org.springframework:spring-r2dbc:6.2.5'
+    // Spring Data R2DBC (ReactiveCrudRepository, R2dbcEntityTemplate)
+    implementation 'org.springframework.data:spring-data-r2dbc:3.4.3'
+
+    // Reactive R2DBC
+    implementation 'io.r2dbc:r2dbc-spi:1.0.0.RELEASE'
+    implementation 'org.postgresql:r2dbc-postgresql:1.0.7.RELEASE'
+    implementation 'io.projectreactor:reactor-core:3.6.12'
+
+    // Lombok (forced 1.18.44+ for Java 24 compatibility)
+    compileOnly 'org.projectlombok:lombok:1.18.44'
+    annotationProcessor 'org.projectlombok:lombok:1.18.44'
+    testCompileOnly 'org.projectlombok:lombok:1.18.44'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.44'
+
+    // MapStruct — compile-time bean mapper (must come after Lombok in annotationProcessor)
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly  'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.projectreactor:reactor-test:3.6.12'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs '-Dnet.bytebuddy.experimental=true'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
