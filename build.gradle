@@ -3,8 +3,14 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.clubix.repo'
+group = 'com.clubix'
 version = '0.1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenLocal()
@@ -42,11 +48,16 @@ dependencies {
     testRuntimeOnly  'org.junit.platform:junit-platform-launcher'
     testImplementation 'io.projectreactor:reactor-test:3.6.12'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
+    testImplementation 'org.assertj:assertj-core:3.26.3'
 }
 
 test {
     useJUnitPlatform()
     jvmArgs '-Dnet.bytebuddy.experimental=true'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-parameters'
 }
 
 publishing {
